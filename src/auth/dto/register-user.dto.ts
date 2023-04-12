@@ -7,4 +7,3 @@ export class RegisterUserDto {
 
   password: string;
 }
- 
