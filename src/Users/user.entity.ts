@@ -14,10 +14,10 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
-  @Column({ length: 100 })
+  @Column({ unique: true })
   email: string;
 
-  @Column({ length: 100 })
+  @Column({ length: 25 })
   password: string;
 
 }
