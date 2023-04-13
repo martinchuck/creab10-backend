@@ -26,4 +26,8 @@ export class UsersRepository extends Repository<User> {
       throw new InternalServerErrorException();
     }
   }
+
+  async findOneByEmail(email: string): Promise<User>{
+    return await this.findOneBy({ email });
+  }
 }
