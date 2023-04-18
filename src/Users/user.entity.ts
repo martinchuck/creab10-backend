@@ -11,7 +11,7 @@ export class User {
   @Column({ length: 25 })
   lastName: string;
 
-  @Column({ default: true })
+  @Column({ default: false })
   isActive: boolean;
 
   @Column({ unique: true })
