@@ -1,7 +1,8 @@
-import { Controller, Body, Post } from '@nestjs/common';
+import { Controller, Body, Post, Get, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginDto } from './dto/login.dto';
+import { ActivateUserDto } from './dto/activate-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -15,5 +16,10 @@ export class AuthController {
   @Post('/login')
   login(@Body() loginDto: LoginDto): Promise<{ accessToken: string }> {
     return this.authService.login(loginDto);
+  }
+
+  @Get('/activate-account')
+  activateAccount(@Query() activateUserDto: ActivateUserDto): Promise<void> {
+    return this.authService.activateUser(activateUserDto);
   }
 }

@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -14,10 +14,16 @@ export class User {
   @Column({ default: false })
   isActive: boolean;
 
+   @Column({ type: 'uuid', unique: true, name: 'activation_token'})
+  activationToken: string; 
+
   @Column({ unique: true })
   email: string;
 
-  @Column({ length: 25 })
+  @Column()
   password: string;
+
+  @CreateDateColumn({ name: 'created_on'})
+  createdOn: Date;
 
 }

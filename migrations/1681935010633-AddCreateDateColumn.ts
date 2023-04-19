@@ -1,16 +1,16 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class IsActiveFalse1681831752795 implements MigrationInterface {
-    name = 'IsActiveFalse1681831752795'
+export class AddCreateDateColumn1681935010633 implements MigrationInterface {
+    name = 'AddCreateDateColumn1681935010633'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`ALTER TABLE \`user\` CHANGE \`isActive\` \`isActive\` tinyint NOT NULL DEFAULT 0`);
+        await queryRunner.query(`ALTER TABLE \`user\` ADD \`createdOn\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`ALTER TABLE \`user\` DROP COLUMN \`password\``);
         await queryRunner.query(`ALTER TABLE \`user\` ADD \`password\` varchar(100) NOT NULL`);
-        await queryRunner.query(`ALTER TABLE \`user\` CHANGE \`isActive\` \`isActive\` tinyint NOT NULL DEFAULT '1'`);
+        await queryRunner.query(`ALTER TABLE \`user\` DROP COLUMN \`createdOn\``);
     }
 
 }
