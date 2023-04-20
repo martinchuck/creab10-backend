@@ -10,6 +10,7 @@ import { v4 } from 'uuid';
 import { ActivateUserDto } from './dto/activate-user.dto';
 import { UnprocessableEntityException } from '@nestjs/common/exceptions';
 import { User } from 'src/Users/user.entity';
+import { RequestResetPasswordDto } from './dto/request-reset-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -33,12 +34,9 @@ export class AuthService {
   }
   async login(loginDto: LoginDto): Promise<{ accessToken: string }> {
     const { email, password } = loginDto;
-    const user = await this.usersRepository.findOneByEmail(email);
+    const user: User = await this.usersRepository.findOneByEmail(email);
 
-    if (
-      user &&
-      (await this.encoderService.checkPassword(password, user.password))
-    ) {
+    if (await this.encoderService.checkPassword(password, user.password)) {
       const payload: JwtPayload = {
         id: user.id,
         email,
@@ -64,5 +62,15 @@ export class AuthService {
     }
 
     this.usersRepository.activateUser(user);
+  }
+
+  async requestResetPassword(
+    requestResetPasswordDto: RequestResetPasswordDto,
+  ): Promise<void> {
+    const { email } = requestResetPasswordDto;
+    const user: User = await this.usersRepository.findOneByEmail(email);
+    user.resetPasswordToken = v4();
+    this.usersRepository.save(user);
+    // Send email (e.g. Dispatch an event so MailerModule can send an email)
   }
 }

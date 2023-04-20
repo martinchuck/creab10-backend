@@ -22,6 +22,9 @@ export class User {
   @Column({ type: 'uuid', name: 'activation_token' })
   activationToken: string;
 
+  @Column({ type: 'uuid', name: 'reset_password_token', nullable: true })
+  resetPasswordToken: string;
+
   @Column({ unique: true })
   email: string;
 

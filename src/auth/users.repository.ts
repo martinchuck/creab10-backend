@@ -4,6 +4,7 @@ import { CustomRepository } from 'src/database/typeorm-ex.decorator';
 import {
   ConflictException,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 
 @CustomRepository(User)
@@ -34,7 +35,13 @@ export class UsersRepository extends Repository<User> {
   }
 
   async findOneByEmail(email: string): Promise<User> {
-    return await this.findOneBy({ email });
+    const user: User = await this.findOneBy({ email });
+
+    if (!user){
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+
+    return user;
   }
 
   async activateUser(user: User): Promise<void> {
