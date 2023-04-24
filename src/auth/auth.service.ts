@@ -11,6 +11,7 @@ import { ActivateUserDto } from './dto/activate-user.dto';
 import { UnprocessableEntityException } from '@nestjs/common/exceptions';
 import { User } from 'src/Users/user.entity';
 import { RequestResetPasswordDto } from './dto/request-reset-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -72,5 +73,14 @@ export class AuthService {
     user.resetPasswordToken = v4();
     this.usersRepository.save(user);
     // Send email (e.g. Dispatch an event so MailerModule can send an email)
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
+    const { resetPasswordToken, password } = resetPasswordDto;
+    const user: User = await this.usersRepository.findOneByResetPasswordToken(resetPasswordToken); 
+
+    user.password = await this.encoderService.encodePassword(password);
+    user.resetPasswordToken = null;
+    this.usersRepository.save(user);
   }
 }

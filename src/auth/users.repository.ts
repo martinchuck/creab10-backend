@@ -59,4 +59,13 @@ export class UsersRepository extends Repository<User> {
       isActive: false,
     });
   }
+
+  async findOneByResetPasswordToken(resetPasswordToken: string): Promise<User> {
+    const user: User = await this.findOneBy({ resetPasswordToken});
+
+    if (!user){
+      throw new NotFoundException();
+    }
+    return user;
+  }
 }
