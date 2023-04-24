@@ -8,10 +8,14 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
 import { v4 } from 'uuid';
 import { ActivateUserDto } from './dto/activate-user.dto';
-import { UnprocessableEntityException } from '@nestjs/common/exceptions';
+import {
+  BadRequestException,
+  UnprocessableEntityException,
+} from '@nestjs/common/exceptions';
 import { User } from 'src/Users/user.entity';
 import { RequestResetPasswordDto } from './dto/request-reset-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -77,10 +81,25 @@ export class AuthService {
 
   async resetPassword(resetPasswordDto: ResetPasswordDto): Promise<void> {
     const { resetPasswordToken, password } = resetPasswordDto;
-    const user: User = await this.usersRepository.findOneByResetPasswordToken(resetPasswordToken); 
+    const user: User = await this.usersRepository.findOneByResetPasswordToken(
+      resetPasswordToken,
+    );
 
     user.password = await this.encoderService.encodePassword(password);
     user.resetPasswordToken = null;
     this.usersRepository.save(user);
+  }
+
+  async changePassword(
+    changePasswordDto: ChangePasswordDto,
+    user: User,
+  ): Promise<void> {
+    const { oldPassword, newPassword } = changePasswordDto;
+    if (await this.encoderService.checkPassword(oldPassword, user.password)) {
+      user.password = await this.encoderService.encodePassword(newPassword);
+      this.usersRepository.save(user);
+    } else {
+      throw new BadRequestException('Old password does not match');
+    }
   }
 }
