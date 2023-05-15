@@ -39,19 +39,23 @@ export class AuthService {
   }
   async login(loginDto: LoginDto): Promise<{ accessToken: string }> {
     const { email, password } = loginDto;
-    const user: User = await this.usersRepository.findOneByEmail(email);
+    try {
+      const user: User = await this.usersRepository.findOneByEmail(email);
 
-    if (await this.encoderService.checkPassword(password, user.password)) {
-      const payload: JwtPayload = {
-        id: user.id,
-        email,
-        isActive: user.isActive,
-      };
-      const accessToken = await this.jwtService.sign(payload);
+      if (await this.encoderService.checkPassword(password, user.password)) {
+        const payload: JwtPayload = {
+          id: user.id,
+          email,
+          isActive: user.isActive,
+        };
+        const accessToken = await this.jwtService.sign(payload);
 
-      return { accessToken };
+        return { accessToken };
+      }
+      throw new UnauthorizedException('Invalid credentials');
+    } catch {
+      throw new UnauthorizedException('Invalid credentials');
     }
-    throw new UnauthorizedException('Invalid credentials');
   }
 
   async activateUser(activateUserDto: ActivateUserDto): Promise<void> {
