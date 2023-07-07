@@ -1,14 +1,15 @@
 import { Category } from 'src/Categories/category.entity';
+import { Curso } from 'src/cursos/curso.entity';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { User } from './src/Users/user.entity';
 export const dataSourceOptions: DataSourceOptions = {
-  type: 'mysql',
+  type: 'postgres',
   host: 'localhost',
-  port: 3306,
-  username: 'root',
-  password: '0000',
+  port: 5432,
+  username: 'postgres',
+  password: '1234',
   database: 'creab10',
-  entities: [User, Category],
+  entities: [User, Category, Curso],
   migrations: ['dist/migrations/*.js'],
 };
 const dataSource = new DataSource(dataSourceOptions);
