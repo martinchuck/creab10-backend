@@ -1,7 +1,7 @@
-import { Category } from 'src/Categories/category.entity';
-import { Curso } from 'src/cursos/curso.entity';
 import { DataSource, DataSourceOptions } from 'typeorm';
+import { Category } from './src/Categories/category.entity';
 import { User } from './src/Users/user.entity';
+import { Curso } from './src/cursos/curso.entity';
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',
   host: 'localhost',
