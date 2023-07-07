@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmExModule } from './database/typeorm-ex.module';
 import { UsersRepository } from './auth/users.repository';
+import { CursosModule } from './cursos/cursos.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { UsersRepository } from './auth/users.repository';
     CategoryModule,
     AuthModule,
     TypeOrmExModule.forCustomRepository([UsersRepository]),
+    CursosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
